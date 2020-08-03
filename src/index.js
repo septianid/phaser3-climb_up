@@ -19,7 +19,7 @@ const config = {
       },
       debugBodyColor: 0x26FF00,
       gravity:{
-        y: 30
+        y: 200
       }
     },
   },

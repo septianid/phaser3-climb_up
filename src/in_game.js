@@ -4,10 +4,11 @@ var player;
 var poleSegment;
 var poleGroup;
 var nextSegmentPos;
-var lastSegment
-var pointer
+var lastSegment;
+var pointer;
 
 var obstacle;
+var obstacleLimit;
 
 export class Game extends Phaser.Scene{
   constructor() {
@@ -17,6 +18,7 @@ export class Game extends Phaser.Scene{
   preload(){
     this.load.image('POLE', './src/assets/POLE.png')
     this.load.image('PLAYER', './src/assets/PLAYER.png')
+    this.load.image('OBSTACLE', './src/assets/OBSTACLE.png')
   }
 
   create(){
@@ -32,7 +34,8 @@ export class Game extends Phaser.Scene{
 
       pointer = this.input.activePointer;
       poleGroup.getChildren().forEach((item) => {
-        item.y += 50
+        item.y += 100
+        //obstacle.y += 50
       })
       //console.log(pointer.x);
       if(pointer.x > 360){
@@ -48,11 +51,12 @@ export class Game extends Phaser.Scene{
 
       this.checkLastSegment()
     })
+    this.spawnObstacle('LEFT')
   }
 
   update(){
 
-    this.cameras.main.scrollY = player.y - this.game.config.height / 2
+    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6
   }
 
   addPoleSegment(posY){
@@ -60,8 +64,8 @@ export class Game extends Phaser.Scene{
     if(posY > -this.game.config.height / 2){
       poleSegment = this.physics.add.image(360, posY, 'POLE').setScale(10, 3)
       poleSegment.setOrigin(0.5, 0)
-      //poleSegment.body.immovable = true
       poleSegment.body.allowGravity = false
+      //poleSegment.body.immovable = true
 
       nextSegmentPos = posY - poleSegment.displayHeight
       poleGroup.add(poleSegment)
@@ -76,10 +80,25 @@ export class Game extends Phaser.Scene{
         lastSegment = item;
       }
     })
-    //console.log(lastSegment.y);
 
     if(lastSegment.y > -this.game.config.height / 2){
       this.addPoleSegment(lastSegment.y - lastSegment.displayHeight)
+    }
+  }
+
+  spawnObstacle(position){
+
+    obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
+    obstacle.setScale(0.25)
+    //console.log('TEST');
+
+    if(position === 'RIGHT'){
+      obstacle.setOrigin(0, 0.5)
+      obstacle.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2)
+    }
+    else {
+      obstacle.setOrigin(1, 0.5)
+      obstacle.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
     }
   }
 }
