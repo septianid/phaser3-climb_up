@@ -7,6 +7,8 @@ var nextSegmentPos;
 var lastSegment
 var pointer
 
+var obstacle;
+
 export class Game extends Phaser.Scene{
   constructor() {
     super('Game Scene')
