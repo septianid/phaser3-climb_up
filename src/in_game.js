@@ -8,17 +8,14 @@ var lastSegment;
 var pointer;
 
 var score;
-var InfoscoreUI;
+var infoScoreUI;
 var scoreUI;
 
-var Timestart;
-var TimeTreshhold;
-var Choice;
-
-
+var timeStart;
+var timeTreshold;
 
 var obstacle;
-var obstacleLimit;
+var obstacleGroup;
 
 export class Game extends Phaser.Scene{
   constructor() {
@@ -33,45 +30,50 @@ export class Game extends Phaser.Scene{
 
   create(){
 
-    Timestart = 0;
-    TimeTreshhold = 0;
+    score = 0;
+    timeStart = 0;
+    timeTreshold = 0;
+    obstacleGroup = [];
     poleGroup = this.add.group()
+
     this.addPoleSegment(800)
+
     player = this.physics.add.sprite((this.game.config.width / 2) + (poleSegment.displayWidth / 2), 720, 'PLAYER').setScale(0.25)
     player.setOrigin(0, 0.5)
     player.body.allowGravity = false
 
-    score = 0;
-    InfoscoreUI = this.add.text(20, 30, 'SCORE' ,{
+    infoScoreUI = this.add.text(20, 30, 'SCORE' ,{
 
-      font: '26px FredokaOne',
+      font: '26px Arial',
       fill: 'white',
       align: 'center'
     }).setOrigin(0, 0.5);
 
     scoreUI = this.add.text(20, 70, '' + score, {
 
-      font: '42px FredokaOne',
+      font: '42px Arial',
       fill: 'white',
       align: 'center'
     }).setOrigin(0, 0.5);
 
-    TimeTreshhold = this.time.addEvent({
+    timeTreshold = this.time.addEvent({
       delay: 1000,
       callback: this.positionSpawn,
       callbackScope: this,
       loop: true
     })
 
+    this.physics.add.collider(player, obstacle, this.checkHit, null);
+
     this.input.on('pointerdown',() => {
 
       pointer = this.input.activePointer;
       poleGroup.getChildren().forEach((item) => {
-        item.y += 100          
+        item.y += 100
         //obstacle.y += 50
       })
       //console.log(pointer.x);
-    
+
       if(pointer.x > 360){
         //console.log('RIGHT');
         player.setOrigin(0, 0.5)
@@ -84,12 +86,21 @@ export class Game extends Phaser.Scene{
       }
       score = this.increaseValueScore(score);
       this.checkLastSegment()
+
+      //console.log(obstacleGroup);
     })
-    this.spawnObstacle('LEFT');
   }
 
-  update(){    
-    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;  
+  update(){
+
+    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
+    obstacleGroup.forEach((obs) => {
+      //console.log(obs.y);
+      if (obs.y > this.game.config.height) {
+
+        obstacleGroup.shift()
+      }
+    })
   }
 
   addPoleSegment(posY){
@@ -119,15 +130,16 @@ export class Game extends Phaser.Scene{
     }
   }
 
-  positionSpawn()
-  {
-    var randomPos = Phaser.Math.Between(1,6);
-    if(randomPos%2==0)
-    {
+  positionSpawn(){
+
+    let randomPos = Phaser.Math.Between(1, 6);
+    timeTreshold.delay = Phaser.Math.Between(1000, 3000);
+    //console.log(timeTreshold.delay);
+
+    if(randomPos % 2 == 0){
       this.spawnObstacle('LEFT');
     }
-    else
-    {
+    else{
       this.spawnObstacle('RIGHT');
     }
   }
@@ -136,6 +148,8 @@ export class Game extends Phaser.Scene{
 
     obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
     obstacle.setScale(0.25)
+    obstacle.setVelocityY(Phaser.Math.Between(100, 500))
+    obstacleGroup.push(obstacle)
     //console.log('TEST');
 
     if(position === 'RIGHT'){
@@ -148,16 +162,21 @@ export class Game extends Phaser.Scene{
     }
   }
 
-  increaseValueScore(score)
-  {
+  checkHit(){
+
+    
+  }
+
+  increaseValueScore(score){
+
     score++;
-    scoreUI.setText(" "+score);
+    scoreUI.setText(""+score);
     return score;
   }
 
-  RandomValueSpawn()
-  {
-    var randomTime = Phaser.Math.Between(300,550);
+  randomValueSpawn(){
+
+    let randomTime = Phaser.Math.Between(300,550);
     return randomTime;
   }
 }
