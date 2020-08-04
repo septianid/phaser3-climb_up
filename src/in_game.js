@@ -6,6 +6,7 @@ var poleGroup;
 var nextSegmentPos;
 var lastSegment;
 var pointer;
+var Allow;
 
 var score;
 var infoScoreUI;
@@ -16,6 +17,8 @@ var timeTreshold;
 
 var obstacle;
 var obstacleGroup;
+
+var CollisionDectection;
 
 export class Game extends Phaser.Scene{
   constructor() {
@@ -29,8 +32,9 @@ export class Game extends Phaser.Scene{
   }
 
   create(){
-
+    Allow = true;
     score = 0;
+    CollisionDectection = 0;
     timeStart = 0;
     timeTreshold = 0;
     obstacleGroup = [];
@@ -63,11 +67,27 @@ export class Game extends Phaser.Scene{
       loop: true
     })
 
-    this.physics.add.collider(player, obstacle, this.checkHit, null);
+    this.input.on('pointerdown',() => this.MovingPole());   
+     this.physics.add.overlap(player, obstacleGroup,this.checkHit,null,this);
+  }
 
-    this.input.on('pointerdown',() => {
+  update(){
 
-      pointer = this.input.activePointer;
+    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
+    obstacleGroup.forEach((obs) => {
+      //console.log(obs.y);
+      if (obs.y > this.game.config.height) {
+        obstacleGroup.shift()
+      }
+    })
+    
+  }
+
+  MovingPole()
+  {
+    if(Allow == true)
+    {
+    pointer = this.input.activePointer;
       poleGroup.getChildren().forEach((item) => {
         item.y += 100
         //obstacle.y += 50
@@ -85,22 +105,8 @@ export class Game extends Phaser.Scene{
         player.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
       }
       score = this.increaseValueScore(score);
-      this.checkLastSegment()
-
-      //console.log(obstacleGroup);
-    })
-  }
-
-  update(){
-
-    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
-    obstacleGroup.forEach((obs) => {
-      //console.log(obs.y);
-      if (obs.y > this.game.config.height) {
-
-        obstacleGroup.shift()
-      }
-    })
+      this.checkLastSegment();
+    }
   }
 
   addPoleSegment(posY){
@@ -150,7 +156,7 @@ export class Game extends Phaser.Scene{
     obstacle.setScale(0.25)
     obstacle.setVelocityY(Phaser.Math.Between(100, 500))
     obstacleGroup.push(obstacle)
-    //console.log('TEST');
+    console.log('TEST');
 
     if(position === 'RIGHT'){
       obstacle.setOrigin(0, 0.5)
@@ -163,12 +169,18 @@ export class Game extends Phaser.Scene{
   }
 
   checkHit(){
-
-    
+    console.log("Pause");
+    CollisionDectection++
+    if(CollisionDectection>1)
+    {
+      this.physics.pause();
+      timeTreshold.remove(false);
+      Allow = false;                 
+    }
+    console.log(CollisionDectection);
   }
 
   increaseValueScore(score){
-
     score++;
     scoreUI.setText(""+score);
     return score;
