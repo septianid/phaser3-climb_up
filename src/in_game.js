@@ -6,7 +6,7 @@ var poleGroup;
 var nextSegmentPos;
 var lastSegment;
 var pointer;
-var Allow;
+var allow;
 
 var score;
 var infoScoreUI;
@@ -18,7 +18,7 @@ var timeTreshold;
 var obstacle;
 var obstacleGroup;
 
-var CollisionDectection;
+var collisionDectection;
 
 export class Game extends Phaser.Scene{
   constructor() {
@@ -29,12 +29,13 @@ export class Game extends Phaser.Scene{
     this.load.image('POLE', './src/assets/POLE.png')
     this.load.image('PLAYER', './src/assets/PLAYER.png')
     this.load.image('OBSTACLE', './src/assets/OBSTACLE.png')
+    this.load.image('POIN', './src/assets/POIN.png')
   }
 
   create(){
-    Allow = true;
+    allow = true;
     score = 0;
-    CollisionDectection = 0;
+    collisionDectection = 0;
     timeStart = 0;
     timeTreshold = 0;
     obstacleGroup = [];
@@ -67,43 +68,45 @@ export class Game extends Phaser.Scene{
       loop: true
     });
 
-    this.input.on('pointerdown',() => this.MovingPole());   
-     this.physics.add.overlap(player, obstacleGroup,this.checkHit,null,this);
+    this.input.on('pointerdown',() => this.MovingPole());
+    this.physics.add.overlap(player, obstacleGroup, this.checkHit, null, this);
   }
 
   update(){
 
     this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
     obstacleGroup.forEach((obs) => {
-      //console.log(obs.y);
       if (obs.y > this.game.config.height) {
-        obstacleGroup.shift()
+        obs.destroy()
       }
     })
-    
+
   }
 
-  MovingPole()
-  {
-    if(Allow == true)
-    {
-    pointer = this.input.activePointer;
+  MovingPole(){
+
+    if(allow == true){
+
+      pointer = this.input.activePointer;
       poleGroup.getChildren().forEach((item) => {
         item.y += 100
-        //obstacle.y += 50
       })
-      //console.log(pointer.x);
 
+      obstacleGroup.forEach((item) => {
+        if(item.texture.key === 'POIN'){
+          item.y += 100
+          //item.body.allowGravity = false
+        }
+      })
       if(pointer.x > 360){
-        //console.log('RIGHT');
         player.setOrigin(0, 0.5)
         player.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2)
       }
       else {
-        //console.log('LEFT');
         player.setOrigin(1, 0.5)
         player.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
       }
+
       score = this.increaseValueScore(score);
       this.checkLastSegment();
     }
@@ -138,25 +141,31 @@ export class Game extends Phaser.Scene{
 
   positionSpawn(){
 
-    let randomPos = Phaser.Math.Between(1, 6);
-    timeTreshold.delay = Phaser.Math.Between(1000, 3000);
+    let leftOrRight = ['LEFT', 'RIGHT']
+    let randomPos = Math.floor(Math.random() * leftOrRight.length);
+    timeTreshold.delay = Phaser.Math.Between(2000, 4000);
     //console.log(timeTreshold.delay);
 
-    if(randomPos % 2 == 0){
-      this.spawnObstacle('LEFT');
-    }
-    else{
-      this.spawnObstacle('RIGHT');
-    }
+    this.spawnObstacle(leftOrRight[randomPos], 100);
   }
 
-  spawnObstacle(position){
+  spawnObstacle(position, speed){
 
-    obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
-    obstacle.setScale(0.25)
-    obstacle.setVelocityY(Phaser.Math.Between(100, 500))
+    let randNum = Phaser.Math.Between(0, 100)
+
+    if(randNum < 30){
+      obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'POIN');
+      obstacle.setScale(0.25)
+      console.log('POIN');
+    }
+    else {
+      obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
+      obstacle.setScale(0.25)
+      obstacle.setVelocityY(Phaser.Math.Between(300, 500))
+      console.log('OBSTACLE');
+    }
+
     obstacleGroup.push(obstacle)
-    console.log('TEST');
 
     if(position === 'RIGHT'){
       obstacle.setOrigin(0, 0.5)
@@ -169,18 +178,19 @@ export class Game extends Phaser.Scene{
   }
 
   checkHit(){
-    console.log("Pause");
-    CollisionDectection++
-    if(CollisionDectection>1)
-    {
+
+    collisionDectection++
+    //console.log("Pause");
+    if(collisionDectection>1){
       this.physics.pause();
       timeTreshold.remove(false);
-      Allow = false;                 
+      allow = false;
     }
-    console.log(CollisionDectection);
+    //console.log(collisionDectection);
   }
 
   increaseValueScore(score){
+
     score++;
     scoreUI.setText(""+score);
     return score;
