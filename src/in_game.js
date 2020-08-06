@@ -18,6 +18,12 @@ var timeTreshold;
 var obstacle;
 var obstacleGroup;
 
+var poin;
+var poinGroup;
+
+var enterScore;
+var enterDeath;
+
 var collisionDectection;
 
 export class Game extends Phaser.Scene{
@@ -35,10 +41,13 @@ export class Game extends Phaser.Scene{
   create(){
     allow = true;
     score = 0;
+    enterScore = 0;
+    enterDeath = 1;
     collisionDectection = 0;
     timeStart = 0;
     timeTreshold = 0;
     obstacleGroup = [];
+    poinGroup = [];
     poleGroup = this.add.group()
 
     this.addPoleSegment(800)
@@ -70,6 +79,7 @@ export class Game extends Phaser.Scene{
 
     this.input.on('pointerdown',() => this.MovingPole());
     this.physics.add.overlap(player, obstacleGroup, this.checkHit, null, this);
+    this.physics.add.overlap(player, poinGroup, this.checkHitpoint, null, this);
   }
 
   update(){
@@ -77,9 +87,15 @@ export class Game extends Phaser.Scene{
     this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
     obstacleGroup.forEach((obs) => {
       if (obs.y > this.game.config.height) {
-        obs.destroy()
+        obs.destroy();
       }
-    })
+    });
+
+    poinGroup.forEach((pon) => {
+      if (pon.y > this.game.config.height) {
+        pon.destroy();
+      }
+    });
 
   }
 
@@ -90,14 +106,12 @@ export class Game extends Phaser.Scene{
       pointer = this.input.activePointer;
       poleGroup.getChildren().forEach((item) => {
         item.y += 100
-      })
+      });
 
-      obstacleGroup.forEach((item) => {
-        if(item.texture.key === 'POIN'){
-          item.y += 100
-          //item.body.allowGravity = false
-        }
-      })
+      poinGroup.forEach((pon) => {      
+          pon.y += 100;
+          //item.body.allowGravity = false       
+      });
       if(pointer.x > 360){
         player.setOrigin(0, 0.5)
         player.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2)
@@ -107,7 +121,7 @@ export class Game extends Phaser.Scene{
         player.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
       }
 
-      score = this.increaseValueScore(score);
+      //score = this.increaseValueScore(score);
       this.checkLastSegment();
     }
   }
@@ -154,39 +168,69 @@ export class Game extends Phaser.Scene{
     let randNum = Phaser.Math.Between(0, 100)
 
     if(randNum < 30){
-      obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'POIN');
-      obstacle.setScale(0.25)
+      poin = this.physics.add.sprite(0, -this.game.config.height / 2, 'POIN');
+      poin.setScale(0.25);
       console.log('POIN');
+      enterScore = 1;
+      enterDeath = 0;
+      poinGroup.push(poin);
     }
     else {
       obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
       obstacle.setScale(0.25)
       obstacle.setVelocityY(Phaser.Math.Between(300, 500))
       console.log('OBSTACLE');
+      enterDeath = 1;
+      enterScore = 0;
+      obstacleGroup.push(obstacle);
     }
 
-    obstacleGroup.push(obstacle)
-
+    if(enterDeath==1&&enterScore == 0)
+    {
     if(position === 'RIGHT'){
-      obstacle.setOrigin(0, 0.5)
-      obstacle.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2)
+
+      obstacle.setOrigin(0, 0.5);
+      obstacle.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2);
     }
     else {
-      obstacle.setOrigin(1, 0.5)
-      obstacle.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
+
+      obstacle.setOrigin(1, 0.5);
+      obstacle.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2);
     }
   }
+  else{
 
-  checkHit(){
+    if(position === 'RIGHT'){
 
-    collisionDectection++
-    //console.log("Pause");
-    if(collisionDectection>1){
-      this.physics.pause();
-      timeTreshold.remove(false);
-      allow = false;
+      poin.setOrigin(0, 0.5);
+      poin.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2);
+
     }
-    //console.log(collisionDectection);
+    else {
+
+      poin.setOrigin(1, 0.5);
+      poin.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2);
+
+    }
+  }
+  }
+
+  checkHit()
+  {    
+    collisionDectection++;
+    //console.log("Pause");
+      if(collisionDectection>1)
+          {
+          this.physics.pause();
+          timeTreshold.remove(false);
+          allow = false;
+          }      
+  }
+
+  checkHitpoint()
+  {
+    poin.destroy(true,true);
+    score = this.increaseValueScore(score);
   }
 
   increaseValueScore(score){
