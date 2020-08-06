@@ -65,7 +65,7 @@ export class Game extends Phaser.Scene{
       callback: this.positionSpawn,
       callbackScope: this,
       loop: true
-    })
+    });
 
     this.input.on('pointerdown',() => this.MovingPole());   
      this.physics.add.overlap(player, obstacleGroup,this.checkHit,null,this);
