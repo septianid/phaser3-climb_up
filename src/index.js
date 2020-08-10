@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { Game } from './in_game.js';
-// import { Menu } from './main_menu.js';
-// import { Loading } from './loading.js';
+import { MainMenu } from './main_menu.js';
+import { Loading } from './loading.js';
 
 const config = {
   type: Phaser.CANVAS,
@@ -14,12 +14,12 @@ const config = {
     default: 'arcade',
     arcade: {
       debug: {
-        showBody: true,
-        //showStaticBody: true
+        showBody: false,
+        showStaticBody: false
       },
       debugBodyColor: 0x26FF00,
       gravity:{
-        y: 10
+        y: 50
       }
     },
   },
@@ -29,7 +29,7 @@ const config = {
     width: 720,
     height: 1280,
   },
-  scene: [/*Loading,Menu,*/Game],
+  scene: [Loading, MainMenu, Game],
   audio: {
     disableWebAudio: true,
   }
