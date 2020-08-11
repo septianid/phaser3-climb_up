@@ -55,15 +55,15 @@ export class MainMenu extends Phaser.Scene {
     //   apiCPV_URL: 'https://captive.macroad.co.id/',
     // }
 
-    // urlData = {
-    //   apiLP_URL: 'https://linipoin-dev.macroad.co.id/',    //// DEVELOPMENT
-    //   apiCPV_URL: 'https://captive-dev.macroad.co.id/',
-    // }
-
     urlData = {
-      apiLP_URL: 'https://88dda0795fec.ngrok.io/',             //// DEVELOPMENT-LOCAL
+      apiLP_URL: 'https://linipoin-dev.macroad.co.id/',    //// DEVELOPMENT
       apiCPV_URL: 'https://captive-dev.macroad.co.id/',
     }
+
+    // urlData = {
+    //   apiLP_URL: 'https://88dda0795fec.ngrok.io/',             //// DEVELOPMENT-LOCAL
+    //   apiCPV_URL: 'https://captive-dev.macroad.co.id/',
+    // }
 
     gameToken = '9294cec82abe5d991993920650b19c69de59d549'
     this.challengersInfo();
