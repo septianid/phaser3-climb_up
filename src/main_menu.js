@@ -61,7 +61,7 @@ export class MainMenu extends Phaser.Scene {
     // }
 
     urlData = {
-      apiLP_URL: 'https://be18fc5e6dab.ngrok.io/',             //// DEVELOPMENT-LOCAL
+      apiLP_URL: 'https://88dda0795fec.ngrok.io/',             //// DEVELOPMENT-LOCAL
       apiCPV_URL: 'https://captive-dev.macroad.co.id/',
     }
 

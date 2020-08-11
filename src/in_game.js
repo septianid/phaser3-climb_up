@@ -121,6 +121,7 @@ export class Game extends Phaser.Scene{
 
     if (poin.y > this.game.config.height + 50) {
       poin.destroy()
+      isPoinStillExist = false
     }
     // poinGroup.forEach((poin) => {
     //   if (poin.y > this.game.config.height) {
@@ -216,12 +217,28 @@ export class Game extends Phaser.Scene{
 
   spawnObstacle(position, speed){
 
-    obstacleTimeTreshold.delay = Phaser.Math.Between(1800, 3000);
+    //obstacleTimeTreshold.delay = Phaser.Math.Between(1500, 2500);
 
     obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
     obstacle.setScale(0.25)
-    obstacle.setVelocityY(Phaser.Math.Between(300, 500))
     obstacleGroup.push(obstacle);
+
+    if (score >= 0 && score <= 10) {
+      obstacle.setVelocityY(Phaser.Math.Between(300, 500))
+      obstacleTimeTreshold.delay = Phaser.Math.Between(1500, 2500);
+    }
+    else if (score > 10 && score <= 20) {
+      obstacle.setVelocityY(Phaser.Math.Between(500, 700))
+      obstacleTimeTreshold.delay = Phaser.Math.Between(1200, 2300);
+    }
+    else if (score > 20 && score <= 30) {
+      obstacle.setVelocityY(Phaser.Math.Between(700, 900))
+      obstacleTimeTreshold.delay = Phaser.Math.Between(1000, 2200);
+    }
+    else {
+      obstacle.setVelocityY(Phaser.Math.Between(900, 1100))
+      obstacleTimeTreshold.delay = Phaser.Math.Between(900, 1900);
+    }
 
     if(position === 'RIGHT'){
       obstacle.setOrigin(0, 0.5);
@@ -318,6 +335,13 @@ export class Game extends Phaser.Scene{
 
       //console.log(data.result);
       scoreText.setText(''+data.result.user_highscore)
+      button.setInteractive()
+      button.on('pointerdown', () => {
+
+        this.scene.start('MainMenu', {
+          sound_status: gameData.sound,
+        });
+      })
     }).catch(error => {
 
       console.log(error.result);
