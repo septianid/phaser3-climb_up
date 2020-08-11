@@ -59,10 +59,12 @@ export class Game extends Phaser.Scene{
     obstacleGroup = [];
     poleGroup = this.add.group()
 
-    this.addPoleSegment(800)
+    this.addPoleSegment(600)
 
-    player = this.physics.add.sprite((this.game.config.width / 2) + (poleSegment.displayWidth / 2), 720, 'PLAYER').setScale(0.25)
+    player = this.physics.add.sprite(this.game.config.width / 2, 720, 'PLAYER').setScale(0.4)
+    //player.setOffset(0)
     player.setOrigin(0, 0.5)
+    player.flipX = true
     player.body.allowGravity = false
 
     infoScoreUI = this.add.text(20, 30, 'SCORE' ,{
@@ -156,13 +158,17 @@ export class Game extends Phaser.Scene{
 
       poin.y += 100
 
-      if(pointer.x > 360){
+      if(pointer.x > 360){          //RIGHT
         player.setOrigin(0, 0.5)
-        player.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2)
+        player.setDepth(1)
+        player.flipX = true
+        player.x = this.game.config.width / 2
       }
-      else {
+      else {                        //LEFT
         player.setOrigin(1, 0.5)
-        player.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2)
+        player.setDepth(1)
+        player.flipX = false
+        player.x = this.game.config.width / 2
       }
 
       //score = this.increaseValueScore(score);
@@ -172,8 +178,8 @@ export class Game extends Phaser.Scene{
 
   addPoleSegment(posY){
 
-    if(posY > -this.game.config.height / 2){
-      poleSegment = this.physics.add.image(360, posY, 'POLE').setScale(10, 3)
+    if(posY > -this.game.config.height){
+      poleSegment = this.physics.add.image(360, posY, 'POLE').setScale(0.8)
       poleSegment.setOrigin(0.5, 0)
       poleSegment.body.allowGravity = false
       //poleSegment.body.immovable = true
@@ -219,8 +225,8 @@ export class Game extends Phaser.Scene{
 
     //obstacleTimeTreshold.delay = Phaser.Math.Between(1500, 2500);
 
-    obstacle = this.physics.add.sprite(0, -this.game.config.height / 2, 'OBSTACLE');
-    obstacle.setScale(0.25)
+    obstacle = this.physics.add.sprite(0, -200, 'OBSTACLE');
+    obstacle.setScale(0.4)
     obstacleGroup.push(obstacle);
 
     if (score >= 0 && score <= 10) {
@@ -242,11 +248,13 @@ export class Game extends Phaser.Scene{
 
     if(position === 'RIGHT'){
       obstacle.setOrigin(0, 0.5);
-      obstacle.x = (this.game.config.width / 2) + (poleSegment.displayWidth / 2);
+      obstacle.flipX = true
+      obstacle.x = this.game.config.width / 2
     }
     else {
       obstacle.setOrigin(1, 0.5);
-      obstacle.x = (this.game.config.width / 2) - (poleSegment.displayWidth / 2);
+      obstacle.flipX = false
+      obstacle.x = this.game.config.width / 2
     }
   }
 
@@ -276,21 +284,22 @@ export class Game extends Phaser.Scene{
     let exitButton = this.add.sprite(360, 820, 'BG_GO')
     exitButton.setOrigin(0.5, 0.5)
     exitButton.setScale(0.5)
-    exitButton.setDepth(1)
+    exitButton.setDepth(3)
 
     let userScorePanel = this.add.sprite(360, 640, 'DG_GO')
     userScorePanel.setOrigin(0.5, 0.5)
     userScorePanel.setScale(0.5)
+    userScorePanel.setDepth(2)
 
     let finalScoreText = this.add.text(360, 560, ''+score, {
       font: 'bold 64px Arial',
       fill: '#FFFFFF',
-    }).setOrigin(0.5, 0.5)
+    }).setOrigin(0.5, 0.5).setDepth(2)
 
     let userHighScore = this.add.text(360, 720, '', {
       font: 'bold 64px Arial',
       fill: '#FFFFFF',
-    }).setOrigin(0.5, 0.5)
+    }).setOrigin(0.5, 0.5).setDepth(2)
 
     let dateOver = new Date()
     this.challengeOver(dateOver, userHighScore, exitButton)

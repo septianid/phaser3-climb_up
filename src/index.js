@@ -6,17 +6,17 @@ import { Loading } from './loading.js';
 const config = {
   type: Phaser.CANVAS,
   parent: "game-page",
-  backgroundColor: 0x000000,
+  backgroundColor: 0x75D5E3,
   dom: {
     createContainer: true
   },
   physics: {
     default: 'arcade',
     arcade: {
-      debug: {
-        showBody: false,
-        showStaticBody: false
-      },
+      // debug: {
+      //   showBody: false,
+      //   showStaticBody: false
+      // },
       debugBodyColor: 0x26FF00,
       gravity:{
         y: 50
