@@ -1,0 +1,15 @@
+body {
+  background-color: #FFF6E8;
+  font-family: 'FredokaOne';
+}
+
+canvas {
+  margin: 0;
+}
+
+@font-face {
+  font-family: "FredokaOne";
+  font-style: normal;
+  font-weight: 400;
+  src: url("src/assets/font/FredokaOne-Regular.ttf");
+}
