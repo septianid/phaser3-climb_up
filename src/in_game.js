@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 
 var player;
+var cloud;
+var cloud2;
+var cloud3;
 var poleSegment;
 var poleGroup;
 var nextSegmentPos;
@@ -67,17 +70,22 @@ export class Game extends Phaser.Scene{
     player.flipX = true
     player.body.allowGravity = false
 
+    cloud = this.physics.add.sprite(120,60,'CLOUD');
+    cloud2 = this.physics.add.sprite(250,950,'CLOUD');
+    cloud3 = this.physics.add.sprite(600,550,'CLOUD');
+
+
     infoScoreUI = this.add.text(20, 30, 'SCORE' ,{
 
       font: '26px Arial',
-      fill: 'white',
+      fill: 'black',
       align: 'center'
     }).setOrigin(0, 0.5);
 
     scoreUI = this.add.text(20, 70, '' + score, {
 
       font: '42px Arial',
-      fill: 'white',
+      fill: 'black',
       align: 'center'
     }).setOrigin(0, 0.5);
 
@@ -104,7 +112,7 @@ export class Game extends Phaser.Scene{
       if(collisionDectection > 1){
         this.physics.pause();
         obstacleTimeTreshold.remove(false);
-        this.showChallengerScore()
+        this.showChallengerScore()      
         allow = false;
       }
     }, null, this);
@@ -114,6 +122,13 @@ export class Game extends Phaser.Scene{
 
   update(){
 
+    cloud.body.allowGravity = false;
+    cloud.setDepth(-1000);
+    cloud2.body.allowGravity = false;
+    cloud2.setDepth(-1000);
+    cloud3.body.allowGravity = false;
+    cloud3.setDepth(-1000);
+    
     this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
     obstacleGroup.forEach((obs) => {
       if (obs.y > this.game.config.height) {
@@ -157,7 +172,7 @@ export class Game extends Phaser.Scene{
       });
 
       poin.y += 100
-
+      this.movecloud();
       if(pointer.x > 360){          //RIGHT
         player.setOrigin(0, 0.5)
         player.setDepth(1)
@@ -355,6 +370,25 @@ export class Game extends Phaser.Scene{
 
       console.log(error.result);
     });
+  }
+
+  movecloud()
+  {
+    cloud.y +=100;
+    cloud2.y +=100;
+    cloud3.y +=100;
+    if(cloud.y>this.game.config.height)
+    {
+      cloud.y-=1500;     
+    }
+    if(cloud2.y>this.game.config.height)
+    {
+      cloud2.y-=1500;     
+    }
+    if(cloud3.y>this.game.config.height)
+    {
+      cloud3.y-=1500;     
+    }
   }
   // checkHitpoint(){
   //
