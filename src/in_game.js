@@ -70,9 +70,9 @@ export class Game extends Phaser.Scene{
     player.flipX = true
     player.body.allowGravity = false
 
-    cloud = this.physics.add.sprite(120,60,'CLOUD');
-    cloud2 = this.physics.add.sprite(250,950,'CLOUD');
-    cloud3 = this.physics.add.sprite(600,550,'CLOUD');
+    cloud = this.physics.add.sprite(-200,60,'CLOUD');
+    cloud2 = this.physics.add.sprite(-200,950,'CLOUD');
+    cloud3 = this.physics.add.sprite(-200,550,'CLOUD');
 
 
     infoScoreUI = this.add.text(20, 30, 'SCORE' ,{
@@ -117,6 +117,35 @@ export class Game extends Phaser.Scene{
       }
     }, null, this);
 
+    this.tweens.add
+    ({
+      targets: cloud,
+      x: 850,
+      duration: 6000,
+      ease: 'Power2',
+      repeat: -1,
+      yoyo: true,  
+    });
+
+  this.tweens.add
+  ({
+    targets: cloud2,
+    x: 850,
+    duration: 7000,
+    ease: 'Power2',
+    repeat: -1,
+    yoyo: true,    
+  });
+
+this.tweens.add
+({
+  targets: cloud3,
+  x: 850,
+  duration: 4500,
+  ease: 'Power2',
+  repeat: -1,
+  yoyo: true, 
+});
     //this.physics.add.collider(player, poinGroup, this.checkHitpoint, null);
   }
 
@@ -374,6 +403,7 @@ export class Game extends Phaser.Scene{
 
   movecloud()
   {
+    
     cloud.y +=100;
     cloud2.y +=100;
     cloud3.y +=100;
