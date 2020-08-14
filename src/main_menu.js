@@ -71,34 +71,33 @@ export class MainMenu extends Phaser.Scene {
     var background = this.add.sprite(360, 1280, 'MENU_BG').setScale(0.68, 0.67)
     background.setOrigin(0.5, 1);
 
-    var title = this.add.sprite(360, 230, 'TITLE').setScale(0.6)
+    var title = this.add.sprite(360, 200, 'TITLE').setScale(0.6)
     title.setOrigin(0.5, 0.5);
 
-    challengeGate = this.add.sprite(360, 600, 'BM_1P').setScale(0.6);
+    challengeGate = this.add.sprite(360, 450, 'BM_1P').setScale(1.3);
     challengeGate.setOrigin(0.5, 0.5);
     challengeGate.on('pointerdown', () => this.conditionChecking())
 
-    challengerListSign = this.add.sprite(425, 770, 'BM_4LD').setScale(0.65);
-    challengerListSign.setOrigin(0.5,0.5);
-    challengerListSign.on("pointerdown",() => this.showChallengersBoard())
-
-    challengerGuideSign = this.add.sprite(190, 670, 'BM_2I').setScale(0.65);
+    challengerGuideSign = this.add.sprite(360, 540, 'BM_2I').setScale(1.3);
     challengerGuideSign.setOrigin(0.5,0.5);
     challengerGuideSign.on("pointerdown",() => this.showTheGuidance())
 
-    challengerContract = this.add.sprite(300, challengerListSign.y, 'BM_3TC').setScale(0.65);
+    challengerContract = this.add.sprite(360, 630, 'BM_3TC').setScale(1.3);
     challengerContract.setOrigin(0.5,0.5);
     challengerContract.on("pointerdown",() => this.showTheContract())
 
+    challengerListSign = this.add.sprite(360, 720, 'BM_4LD').setScale(1.3);
+    challengerListSign.setOrigin(0.5,0.5);
+    challengerListSign.on("pointerdown",() => this.showChallengersBoard())
 
     if(musicStatus === true){
       menuSound.setMute(false)
-      musicToggle = this.add.sprite(530, challengerGuideSign.y, 'BM_5N').setScale(0.65);
+      musicToggle = this.add.sprite(660, 60, 'BM_5N').setScale(0.8);
       musicToggle.setOrigin(0.5,0.5);
     }
     else{
       menuSound.setMute(true)
-      musicToggle = this.add.sprite(530, challengerGuideSign.y, 'BM_5F').setScale(0.65);
+      musicToggle = this.add.sprite(660, 60, 'BM_5F').setScale(0.8);
       musicToggle.setOrigin(0.5,0.5);
     }
 
@@ -135,10 +134,10 @@ export class MainMenu extends Phaser.Scene {
 
   showPaymentOption(required){
 
-    let optionBox = this.add.sprite(360, 640, 'PM_PY').setScale(0.4, 0.45);
+    let optionBox = this.add.sprite(360, 500, 'PM_PY').setScale(0.8);
     optionBox.setOrigin(0.5, 0.5);
 
-    let changeMind = this.add.sprite(530, 500, 'BM_GEXB').setScale(0.5);
+    let changeMind = this.add.sprite(590, 400, 'BM_GEXB').setScale(0.6);
     changeMind.setOrigin(0.5, 0.5);
     changeMind.setInteractive();
     changeMind.on('pointerdown', () => {
@@ -150,7 +149,7 @@ export class MainMenu extends Phaser.Scene {
       this.activateButtons()
     })
 
-    poinPayOption = this.add.sprite(270, 640, 'BM_1BPP'+required).setScale(0.43);
+    poinPayOption = this.add.sprite(250, 500, 'BM_1BPP'+required).setScale(1.1);
     poinPayOption.setOrigin(0.5,0.5);
     poinPayOption.setInteractive();
     poinPayOption.on('pointerdown', () => {
@@ -162,11 +161,11 @@ export class MainMenu extends Phaser.Scene {
         this.showDisclaimer('DM_PW', 0.6)
       }
       else {
-        this.showPayConfirmation('DM_PP'+required, 0.6, changeMind)
+        this.showPayConfirmation('DM_PP'+required, 0.9, changeMind)
       }
     })
 
-    adWatchPayOption = this.add.sprite(450, poinPayOption.y, 'BM_1AAD').setScale(0.43);
+    adWatchPayOption = this.add.sprite(470, poinPayOption.y, 'BM_1AAD').setScale(1.1);
     adWatchPayOption.setOrigin(0.5,0.5);
     adWatchPayOption.setInteractive();
     adWatchPayOption.on("pointerdown",() => {
@@ -249,11 +248,11 @@ export class MainMenu extends Phaser.Scene {
     poinPayOption.disableInteractive()
     adWatchPayOption.disableInteractive()
 
-    let confirmationBoard = this.add.sprite(360, 640, asset).setScale(size, 0.8);
+    let confirmationBoard = this.add.sprite(360, 640, asset).setScale(size);
     confirmationBoard.setOrigin(0.5, 0.5)
     confirmationBoard.setDepth(1)
 
-    let confirmChoice = this.add.sprite(260, 810, 'BM_CPP').setScale(0.5);
+    let confirmChoice = this.add.sprite(260, 810, 'BM_CPP').setScale(0.8);
     confirmChoice.setOrigin(0.5, 0.5);
     confirmChoice.setDepth(1)
     confirmChoice.setInteractive();
@@ -266,7 +265,7 @@ export class MainMenu extends Phaser.Scene {
       confirmChoice.disableInteractive();
     });
 
-    let denyChoice = this.add.sprite(465, 810, 'BM_DPP').setScale(0.5);
+    let denyChoice = this.add.sprite(465, 810, 'BM_DPP').setScale(0.9);
     denyChoice.setOrigin(0.5, 0.5);
     denyChoice.setDepth(1)
     denyChoice.setInteractive();
@@ -288,7 +287,7 @@ export class MainMenu extends Phaser.Scene {
     this.disableButtons()
     clickSound.play()
 
-    let warningPopUp = this.add.sprite(360, 640, asset).setScale(size, 0.7);
+    let warningPopUp = this.add.sprite(360, 640, asset).setScale(size);
     warningPopUp.setOrigin(0.5, 0.5);
     warningPopUp.setDepth(1);
 
@@ -321,10 +320,10 @@ export class MainMenu extends Phaser.Scene {
     let urlParams = new URLSearchParams(window.location.search);
     let userSession = urlParams.get('session');
 
-    var bestChallengerBoard = this.add.sprite(360, 640, 'PM_3LD').setScale(0.65);
+    var bestChallengerBoard = this.add.sprite(360, 640, 'PM_3LD').setScale(1.2);
     bestChallengerBoard.setOrigin(0.5,0.5);
 
-    var imDone =  this.add.sprite(bestChallengerBoard.x + 235, bestChallengerBoard.y - 470, 'BM_GEXB').setScale(0.6);
+    var imDone =  this.add.sprite(bestChallengerBoard.x + 280, bestChallengerBoard.y - 400, 'BM_GEXB').setScale(0.7);
     imDone.disableInteractive();
     imDone.setOrigin(0.5,0.5);
 
@@ -361,23 +360,22 @@ export class MainMenu extends Phaser.Scene {
     clickSound.play()
     this.disableButtons();
     var contentText = [
-      '1.\nTekan dan tahan layar untuk menggerakan Cart\n',
-      '2.\nLepas untuk mengurangi kecepatan Cart\n',
-      '3.\nSkor dan bonus waktu diperoleh ketika mencapai jarak 3m dan kelipatannya\n',
-      '4.\nPertahankan box pada Cart agar tidak jatuh, dalam waktu yg telah ditentukan'
+      '1.\nTekan di sisi kanan layar untuk memanjat dari sisi kanan, dan tekan sisi kiri layar untuk memanjat dari sisi kiri, \n',
+      '2.\nHindari penghalang yang berjatuhan\n',
+      '3.\nAmbil poin yang ada di sepanjang permainan untuk menambah skor\n',
     ]
 
-    var guidanceBoard = this.add.sprite(360, 640, 'PM_1I').setScale(0.62);
+    var guidanceBoard = this.add.sprite(360, 640, 'PM_1I').setScale(1);
     guidanceBoard.setOrigin(0.5,0.5);
 
-    var imDone =  this.add.sprite(guidanceBoard.x + 225, guidanceBoard.y - 460, 'BM_GEXB').setScale(0.6);
+    var imDone =  this.add.sprite(guidanceBoard.x + 270, guidanceBoard.y - 380, 'BM_GEXB').setScale(0.7);
     imDone.setInteractive();
     imDone.setOrigin(0.5,0.5);
 
     var guideText = this.add.text(360, 620, contentText, {
 
       font: '26px FredokaOne',
-      fill: '#FFFFFF',
+      fill: '#8A4923',
       align: 'center',
       wordWrap: {
         width: 490
@@ -407,10 +405,9 @@ export class MainMenu extends Phaser.Scene {
       "    melihat tayangan iklan atau",
       "    dapat menukarkan 10 poin dari",
       "    LINIPOIN",
-      "3. Pemain yang berhasil mempertahankan",
-      "    kotak pada tempat yang disediakan",
-      "    akan mendapatkan poin berdasarkan" ,
-      "    jarak yang berhasil ditempuh",
+      "3. Pemain yang berhasil bertahan",
+      "    selama permainan akan mendapatkan",
+      "    poin berdasarkan poin yang terambil" ,
       "4. Poin yang didapat dari setiap akhir",
       "    permainan akan langsung",
       "    ditambahkan ke akumulasi poin",
@@ -427,12 +424,12 @@ export class MainMenu extends Phaser.Scene {
     let tncContent = [page1, page2]
     let selector = 0
 
-    var contractBoard = this.add.sprite(360,640, 'PM_2TC').setScale(0.62);
+    var contractBoard = this.add.sprite(360,640, 'PM_2TC').setScale(1);
     contractBoard.setOrigin(0.5, 0.5);
 
     let text = this.add.text(370, 640, tncContent[selector], {
       font: '23px FredokaOne',
-      color: '#FFFFFF',
+      color: '#8A4923',
       align: 'left',
       wordWrap: {
         width: 500
@@ -467,7 +464,7 @@ export class MainMenu extends Phaser.Scene {
     //   text.setText(tncContent[selector]);
     // })
 
-    var imDone =  this.add.sprite(contractBoard.x + 225, contractBoard.y - 450, 'BM_GEXB').setScale(0.6);
+    var imDone =  this.add.sprite(contractBoard.x + 270, contractBoard.y - 380, 'BM_GEXB').setScale(0.7);
     imDone.setInteractive();
     imDone.setOrigin(0.5,0.5);
 
@@ -507,13 +504,13 @@ export class MainMenu extends Phaser.Scene {
       menuSound.setMute(true)
       musicStatus = false;
       musicToggle.setTexture('BM_5F');
-      musicToggle.setScale(0.65);
+      musicToggle.setScale(0.8);
     }
     else{
       menuSound.setMute(false);
       musicStatus = true;
       musicToggle.setTexture('BM_5N');
-      musicToggle.setScale(0.65);
+      musicToggle.setScale(0.8);
     }
   }
 
@@ -653,9 +650,9 @@ export class MainMenu extends Phaser.Scene {
             startPos += 0;
           }
           else {
-            startPos += 70;
+            startPos += 60;
           }
-          let life = this.add.image(startPos, 450, 'LIFE').setScale(0.7);
+          let life = this.add.image(startPos, 370, 'LIFE').setScale(0.5);
           life.setOrigin(0.5, 0.5);
         }
 
@@ -664,20 +661,20 @@ export class MainMenu extends Phaser.Scene {
         this.activateButtons();
       }
       else {
-        this.showDisclaimer('WM_EVW', 0.6)
+        this.showDisclaimer('WM_EVW', 0.9)
       }
 
     }).catch(error => {
 
       console.log(error);
-      this.showDisclaimer('WM_SE', 0.6)
+      this.showDisclaimer('WM_SE', 0.9)
     });
   }
 
   challengerListing(hID, cID, hSC, cSC){
 
     let startPosH = 385
-    let startPosC = 685
+    let startPosC = 665
     this.preloadAnimation(360, 720, 1.4, 8, 'PRE_ANIM1');
 
     fetch(urlData.apiLP_URL+"api/v1.0/leaderboard/leaderboard_imlek?limit_highscore=5&limit_total_score=5&linigame_platform_token="+gameToken, {
@@ -702,19 +699,19 @@ export class MainMenu extends Phaser.Scene {
           startPosH += 0
         }
         else {
-          startPosH += 43
+          startPosH += 39
         }
 
         let shortHID = uNameHi.length > 16 ? uNameHi.substring(0, 16)+'...' : uNameHi
-        hID[i] = this.add.text(150, startPosH, ''+shortHID, {
+        hID[i] = this.add.text(170, startPosH, ''+shortHID, {
           font: '23px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5);
 
-        hSC[i] = this.add.text(565, startPosH, ''+data.result.highscore_leaderboard[i].user_highscore, {
+        hSC[i] = this.add.text(550, startPosH, ''+data.result.highscore_leaderboard[i].user_highscore, {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'right'
         }).setOrigin(1, 0.5);
       }
@@ -726,19 +723,19 @@ export class MainMenu extends Phaser.Scene {
           startPosC += 0
         }
         else {
-          startPosC += 43
+          startPosC += 39
         }
 
         let shortCID = uNameCum.length > 16 ? uNameCum.substring(0, 16)+'...' : uNameCum
-        cID[i] = this.add.text(150, startPosC, ''+shortCID, {
+        cID[i] = this.add.text(170, startPosC, ''+shortCID, {
           font: '23px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5);
 
-        cSC[i] = this.add.text(565, startPosC, ''+data.result.totalscore_leaderboard[i].total_score, {
+        cSC[i] = this.add.text(550, startPosC, ''+data.result.totalscore_leaderboard[i].total_score, {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(1, 0.5);
       }
@@ -753,12 +750,12 @@ export class MainMenu extends Phaser.Scene {
 
     let rankPosConfig = {
       high_score: {
-        x: 160,
-        y: 1000
+        x: 170,
+        y: 950
       },
       total_score: {
-        x: 160,
-        y: 1050,
+        x: 170,
+        y: 995,
       }
     }
 
@@ -784,24 +781,24 @@ export class MainMenu extends Phaser.Scene {
       if(data.result.rank_high_score === 0){
         rHData.rank = this.add.text(rankPosConfig.high_score.x, rankPosConfig.high_score.y, ''+data.result.rank_high_score, {
           font: '28px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5)
-        rHData.score = this.add.text(rankPosConfig.high_score.x + 400, rankPosConfig.high_score.y, '0', {
+        rHData.score = this.add.text(rankPosConfig.high_score.x + 380, rankPosConfig.high_score.y, '0', {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'right'
         }).setOrigin(1, 0.5)
       }
       else {
         rHData.rank = this.add.text(rankPosConfig.high_score.x, rankPosConfig.high_score.y, '#'+data.result.rank_high_score.ranking, {
           font: '26px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5)
-        rHData.score = this.add.text(rankPosConfig.high_score.x + 400, rankPosConfig.high_score.y, ''+data.result.rank_high_score.user_highscore, {
+        rHData.score = this.add.text(rankPosConfig.high_score.x + 380, rankPosConfig.high_score.y, ''+data.result.rank_high_score.user_highscore, {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'right'
         }).setOrigin(1, 0.5)
       }
@@ -809,24 +806,24 @@ export class MainMenu extends Phaser.Scene {
       if(data.result.rank_total_score === 0){
         rTData.rank = this.add.text(rankPosConfig.total_score.x, rankPosConfig.total_score.y, ''+data.result.rank_total_score, {
           font: '28px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5)
-        rTData.score = this.add.text(rankPosConfig.total_score.x + 400, rankPosConfig.total_score.y, '0', {
+        rTData.score = this.add.text(rankPosConfig.total_score.x + 380, rankPosConfig.total_score.y, '0', {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'right'
         }).setOrigin(1, 0.5)
       }
       else {
         rTData.rank = this.add.text(rankPosConfig.total_score.x, rankPosConfig.total_score.y, '#'+data.result.rank_total_score.ranking, {
           font: '26px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'left'
         }).setOrigin(0, 0.5)
-        rTData.score = this.add.text(rankPosConfig.total_score.x + 400, rankPosConfig.total_score.y, ''+data.result.rank_total_score.total_score, {
+        rTData.score = this.add.text(rankPosConfig.total_score.x + 380, rankPosConfig.total_score.y, ''+data.result.rank_total_score.total_score, {
           font: '25px FredokaOne',
-          fill: '#FFFFFF',
+          fill: '#8A4923',
           align: 'right'
         }).setOrigin(1, 0.5)
       }
@@ -843,7 +840,7 @@ export class MainMenu extends Phaser.Scene {
 
     this.connectToSource();
 
-    this.showDisclaimer('DM_ADL', 0.6)
+    this.showDisclaimer('DM_ADL', 0.9)
     this.preloadAnimation(360, 680, 1.3, 8, 'PRE_ANIM1');
     //this.disableButtons()
 
