@@ -169,7 +169,12 @@ export class Game extends Phaser.Scene{
       yoyo: true,
     });
     //this.physics.add.collider(player, poinGroup, this.checkHitpoint, null);
-
+    cloud.body.allowGravity = false;
+    cloud.setDepth(-1);
+    cloud2.body.allowGravity = false;
+    cloud2.setDepth(-1);
+    cloud3.body.allowGravity = false;
+    cloud3.setDepth(-1);
   }
 
   update(){
@@ -210,40 +215,25 @@ export class Game extends Phaser.Scene{
     //   timerBar.fillStyle(0xC6573E, 1)
     // }
 
-    cloud.body.allowGravity = false;
-    cloud.setDepth(-1);
-    cloud2.body.allowGravity = false;
-    cloud2.setDepth(-1);
-    cloud3.body.allowGravity = false;
-    cloud3.setDepth(-1);
-
     this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
+
     obstacleGroup.forEach((obs) => {
-      if (obs.y > this.game.config.height) {
+      if(obs.y > this.game.config.height) {
         obs.destroy();
       }
     });
+
+    poleGroup.getChildren().forEach((pole) => {
+      if(pole.y > this.game.config.height){
+        pole.destroy();
+      }
+    })
 
     if (poin.y > this.game.config.height + 50) {
       poin.destroy()
       isPoinStillExist = false
     }
 
-    poinCollide = this.physics.add.overlap(player, poin, () => {
-
-      score += 2;
-      scoreUI.setText(""+score);
-      poinCollide.destroy()
-      poin.destroy()
-      isPoinStillExist = false
-
-      let time = new Date()
-      playLog.push({
-        time: time,
-        score: score,
-        deadStatus: 'ALIVE'
-      })
-    }, null, this);
   }
 
   MovingPole(){
@@ -259,7 +249,7 @@ export class Game extends Phaser.Scene{
       });
 
       //poin.y += 100
-      this.movecloud();
+      this.moveCloud();
       if(pointer.x > 360){          //RIGHT
         player.setOrigin(0, 0.5)
         player.setDepth(1)
@@ -292,7 +282,7 @@ export class Game extends Phaser.Scene{
     }
   }
 
-  movecloud(){
+  moveCloud(){
 
     cloud.y += 10;
     cloud2.y += 10;
@@ -379,6 +369,22 @@ export class Game extends Phaser.Scene{
   spawnPoin(position){
 
     poinTimeTreshold.delay = Phaser.Math.Between(4000, 5000);
+
+    poinCollide = this.physics.add.overlap(player, poin, () => {
+
+      score += 2;
+      scoreUI.setText(""+score);
+      poinCollide.destroy()
+      poin.destroy()
+      isPoinStillExist = false
+
+      let time = new Date()
+      playLog.push({
+        time: time,
+        score: score,
+        deadStatus: 'ALIVE'
+      })
+    }, null, this);
 
     if(isPoinStillExist === false){
       poin = this.physics.add.sprite(0, -this.game.config.height / 2, 'POIN');
