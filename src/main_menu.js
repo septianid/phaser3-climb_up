@@ -50,15 +50,15 @@ export class MainMenu extends Phaser.Scene {
 
   create(){
 
-    // urlData = {
-    //   apiLP_URL: 'https://linipoin-api.macroad.co.id/',    //// PRODUCTION
-    //   apiCPV_URL: 'https://captive.macroad.co.id/',
-    // }
-
     urlData = {
-      apiLP_URL: 'https://linipoin-dev.macroad.co.id/',    //// DEVELOPMENT
-      apiCPV_URL: 'https://captive-dev.macroad.co.id/',
+      apiLP_URL: 'https://linipoin-api.macroad.co.id/',    //// PRODUCTION
+      apiCPV_URL: 'https://captive.macroad.co.id/',
     }
+
+    // urlData = {
+    //   apiLP_URL: 'https://linipoin-dev.macroad.co.id/',    //// DEVELOPMENT
+    //   apiCPV_URL: 'https://captive-dev.macroad.co.id/',
+    // }
 
     // urlData = {
     //   apiLP_URL: 'https://88dda0795fec.ngrok.io/',             //// DEVELOPMENT-LOCAL
@@ -360,9 +360,10 @@ export class MainMenu extends Phaser.Scene {
     clickSound.play()
     this.disableButtons();
     var contentText = [
-      '1.\nTekan di sisi kanan layar untuk memanjat dari sisi kanan, dan tekan sisi kiri layar untuk memanjat dari sisi kiri, \n',
-      '2.\nHindari penghalang yang berjatuhan\n',
-      '3.\nAmbil poin yang ada di sepanjang permainan untuk menambah skor\n',
+      '1.\nTekan sisi kanan layar untuk memanjat dari sisi kanan dan tekan sisi kiri layar untuk memanjat dari sisi kiri \n',
+      '2.\nTekan sisi layar secara berkali-kali agar waktu bermain terus bertambah\n',
+      '3.\nHindari penghalang yang jatuh pada sisi tiang\n',
+      '4.\nAmbil coin yang terdapat di sepanjang permainan untuk menambah skor\n',
     ]
 
     var guidanceBoard = this.add.sprite(360, 640, 'PM_1I').setScale(1);
@@ -405,9 +406,9 @@ export class MainMenu extends Phaser.Scene {
       "    melihat tayangan iklan atau",
       "    dapat menukarkan 10 poin dari",
       "    LINIPOIN",
-      "3. Pemain yang berhasil bertahan",
-      "    selama permainan akan mendapatkan",
-      "    poin berdasarkan poin yang terambil" ,
+      "3. Pemain akan mendapatkan tambahan",
+      "    poin sesuai dengan jumlah coin yang",
+      "    berhasil diambil selama permainan" ,
       "4. Poin yang didapat dari setiap akhir",
       "    permainan akan langsung",
       "    ditambahkan ke akumulasi poin",
