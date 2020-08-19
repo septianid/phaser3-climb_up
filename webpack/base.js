@@ -1,16 +1,18 @@
 const webpack = require("webpack");
+const merge = require("webpack-merge");
+const obfuscate = require("./obfuscate");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
-module.exports = {
+module.exports = merge(obfuscate, {
   mode: "development",
   devtool: "eval-source-map",
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /src/],
         use: {
           loader: "babel-loader"
         }
@@ -37,4 +39,4 @@ module.exports = {
       template: "./index.html"
     })
   ]
-};
+})
