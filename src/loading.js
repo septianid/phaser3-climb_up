@@ -66,6 +66,7 @@ export class Loading extends Phaser.Scene{
     this.load.image('PLAYER', './src/assets/PLAYER.png')
     this.load.image('OBSTACLE', './src/assets/OBSTACLE.png')
     this.load.image('POIN', './src/assets/POIN.png')
+    this.load.image('CLOUD','./src/assets/CLOUD.png');
     //this.load.image('timebar', './src/assets/time_bar.png');
 
     //this.load.image('cloud1','./src/assets/cloud.png');
