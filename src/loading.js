@@ -24,7 +24,7 @@ export class Loading extends Phaser.Scene{
 
   preload(){
     this.add.sprite(360, 640, 'LOADING_BG').setScale(0.68, 0.67);
-    this.add.sprite(360, 230, 'TITLE').setScale(0.6);
+    this.add.sprite(360, 200, 'TITLE').setScale(0.6);
     this.load.spritesheet('PRE_ANIM1', './src/assets/PRE_ANIM1.png', {
       frameWidth: 64,
       frameHeight: 64,
@@ -33,6 +33,7 @@ export class Loading extends Phaser.Scene{
       frameWidth: 64,
       frameHeight: 64,
     });
+    this.load.image('LOADING_BOXG', 'src/assets/LOADING_BOXG.png');
     this.load.image('MENU_BG', './src/assets/MENU_BG.jpg');
     this.load.image('TAP', './src/assets/TAP_SIGN.png');
     this.load.image('BM_1P', './src/assets/BM_1P.png');
@@ -61,15 +62,17 @@ export class Loading extends Phaser.Scene{
 
     this.load.image('BG_GO', './src/assets/BG_GO.png');
     this.load.image('DG_GO', './src/assets/DG_GO.png');
-
+    this.load.spritesheet('PLAYER', './src/assets/PLAYER.png', {
+      frameWidth: 700,
+      frameHeight: 700,
+    });
     this.load.image('POLE', './src/assets/POLE.png')
-    this.load.image('PLAYER', './src/assets/PLAYER.png')
+    //this.load.image('PLAYER', './src/assets/PLAYER.png')
     this.load.image('OBSTACLE', './src/assets/OBSTACLE.png')
     this.load.image('POIN', './src/assets/POIN.png')
     this.load.image('CLOUD','./src/assets/CLOUD.png');
     //this.load.image('timebar', './src/assets/time_bar.png');
 
-    //this.load.image('cloud1','./src/assets/cloud.png');
     //this.load.image('cloud2','./src/assets/cloud2.png');
     //this.load.image('cloud3','./src/assets/cloud3.png');
 
@@ -81,7 +84,7 @@ export class Loading extends Phaser.Scene{
     this.load.audio('POIN_COUNT', "./src/assets/sound/POIN_COUNT.mp3");
 
     progressBar = this.add.graphics();
-    progressBox = this.add.sprite(360, 640, 'LOADING_BOX').setScale(0.4);
+    progressBox = this.add.sprite(360, 640, 'LOADING_BOX').setScale(0.58, 0.75);
 
     var width = this.cameras.main.width;
     var height = this.cameras.main.height;
@@ -125,7 +128,7 @@ export class Loading extends Phaser.Scene{
     this.load.on('progress', function (value) {
       progressBar.clear();
 
-      progressBar.fillStyle(0xEF4138, 1);
+      progressBar.fillStyle(0xD6E557, 0xD6E557, 0x8CC63E, 0x8CC63E, 1);
       progressBar.fillRect(180, 615, 360 * value, 50);
       progressBar.setDepth(1)
     });
@@ -137,7 +140,7 @@ export class Loading extends Phaser.Scene{
     this.load.on('complete', () => {
       isComplete = true
       progressBox.setDepth(1);
-      progressBar.fillStyle(0xEF4138, 1)
+      progressBar.fillStyle(0xD6E557, 0xD6E557, 0x8CC63E, 0x8CC63E, 1)
       progressBar.fillRect(180, 615, 360, 50);
       progressBar.setDepth(1)
     });
@@ -145,7 +148,7 @@ export class Loading extends Phaser.Scene{
 
   create(){
     if(isComplete === true && isError === false){
-      var tapSign = this.add.sprite(360, 800, 'TAP').setScale(0.4);
+      var tapSign = this.add.sprite(360, 800, 'TAP').setScale(0.5);
       tapSign.setOrigin(0.5, 0.5)
 
       this.input.on("pointerdown", () => {

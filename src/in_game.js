@@ -14,7 +14,6 @@ var allow;
 var score;
 var infoScoreUI;
 var scoreUI;
-
 var obstacleTimeTreshold;
 var poinTimeTreshold
 
@@ -23,9 +22,12 @@ var obstacleGroup;
 var poin;
 var poinGroup;
 var isPoinStillExist;
-var gameData = {}
-var playLog = []
 var poinCollide;
+var timerBar
+var timerBG
+var playLog = []
+var gameData = {}
+var gameOverStatus = {}
 // var enterScore;
 // var enterDeath;
 
@@ -55,37 +57,52 @@ export class Game extends Phaser.Scene{
 
     allow = true;
     isPoinStillExist = false
+    //isTimeOut = false
     score = 0;
-    // enterScore = 0;
-    // enterDeath = 1;
     collisionDectection = 0;
     obstacleGroup = [];
+
+    gameOverStatus = {
+      isHit: false,
+      isTimeOut: false
+    }
+
+    timerBG = this.add.sprite(360, 0, 'LOADING_BOXG').setScale(0.25).setOrigin(0.5, 0.5).setDepth(1)
+    timerBar = this.add.graphics().fillStyle(0x8CC63E, 1).fillRect(0, 0, 210, 30).setDepth(1).setPosition(255, -15)
+
     poleGroup = this.add.group()
 
     this.addPoleSegment(600)
 
-    player = this.physics.add.sprite(this.game.config.width / 2, 720, 'PLAYER').setScale(0.4)
-    //player.setOffset(0)
+    player = this.physics.add.sprite(this.game.config.width / 2 - 60, 720, 'PLAYER').setScale(0.4)
+    player.setSize(200, 500);
     player.setOrigin(0, 0.5)
     player.flipX = true
     player.body.allowGravity = false
 
-    cloud = this.physics.add.sprite(-200,60,'CLOUD');
-    cloud2 = this.physics.add.sprite(-200,950,'CLOUD');
-    cloud3 = this.physics.add.sprite(-200,550,'CLOUD');
+    this.anims.create({
+      key: 'PLAYER',
+      frames: this.anims.generateFrameNumbers('PLAYER', {
+        start: 1,
+        end: 12
+      }),
+      frameRate: 20,
+      repeat: 0
+    });
 
+    cloud = this.physics.add.sprite(-200, 60,'CLOUD');
+    cloud2 = this.physics.add.sprite(-200, 950,'CLOUD');
+    cloud3 = this.physics.add.sprite(-200, 550,'CLOUD');
 
-    infoScoreUI = this.add.text(20, 30, 'SCORE' ,{
-
-      font: '26px Arial',
-      fill: 'black',
+    infoScoreUI = this.add.text(80, -30, 'SCORE',{
+      font: '42px FredokaOne',
+      fill: '#7E4B38',
       align: 'center'
-    }).setOrigin(0, 0.5);
+    }).setOrigin(0.5, 0.5);
 
-    scoreUI = this.add.text(20, 70, '' + score, {
-
-      font: '42px Arial',
-      fill: 'black',
+    scoreUI = this.add.text(50, 30, '' + score, {
+      font: '76px FredokaOne',
+      fill: '#7E4B38',
       align: 'center'
     }).setOrigin(0, 0.5);
 
@@ -107,88 +124,116 @@ export class Game extends Phaser.Scene{
 
     this.physics.add.collider(player, obstacleGroup, () => {
 
-      collisionDectection++;
-
-      if(collisionDectection > 1){
-        this.physics.pause();
+      timerBar.scaleX -= 0
+      if(gameOverStatus.isHit === false){
+        this.physics.pause()
         obstacleTimeTreshold.remove(false);
-        this.showChallengerScore()      
         allow = false;
+
+        let time = new Date()
+        playLog.push({
+          time: time,
+          score: score,
+          deadStatus: 'HIT_OBSTACLE'
+        })
+        gameOverStatus.isHit = true
+        gameOverStatus.isTimeOut = true
+        this.showChallengerScore()
       }
     }, null, this);
 
-    this.tweens.add
-    ({
+    this.tweens.add({
       targets: cloud,
       x: 850,
       duration: 6000,
       ease: 'Power2',
       repeat: -1,
-      yoyo: true,  
+      yoyo: true,
     });
 
-  this.tweens.add
-  ({
-    targets: cloud2,
-    x: 850,
-    duration: 7000,
-    ease: 'Power2',
-    repeat: -1,
-    yoyo: true,    
-  });
+    this.tweens.add({
+      targets: cloud2,
+      x: 850,
+      duration: 7000,
+      ease: 'Power2',
+      repeat: -1,
+      yoyo: true,
+    });
 
-this.tweens.add
-({
-  targets: cloud3,
-  x: 850,
-  duration: 4500,
-  ease: 'Power2',
-  repeat: -1,
-  yoyo: true, 
-});
+    this.tweens.add({
+      targets: cloud3,
+      x: 850,
+      duration: 4500,
+      ease: 'Power2',
+      repeat: -1,
+      yoyo: true,
+    });
     //this.physics.add.collider(player, poinGroup, this.checkHitpoint, null);
+    cloud.body.allowGravity = false;
+    cloud.setDepth(-1);
+    cloud2.body.allowGravity = false;
+    cloud2.setDepth(-1);
+    cloud3.body.allowGravity = false;
+    cloud3.setDepth(-1);
   }
 
   update(){
 
-    cloud.body.allowGravity = false;
-    cloud.setDepth(-1000);
-    cloud2.body.allowGravity = false;
-    cloud2.setDepth(-1000);
-    cloud3.body.allowGravity = false;
-    cloud3.setDepth(-1000);
-    
+    //console.log(timerProperties.timerBar.x);
+    timerBar.scaleX -= (1/500)
+    //console.log(timerBar.scaleX);
+
+    if(timerBar.scaleX <= 0){
+      timerBar.scaleX = 0
+      if(gameOverStatus.isTimeOut == false) {
+        this.physics.pause()
+        obstacleTimeTreshold.remove(false);
+        allow = false;
+
+        let time = new Date()
+        playLog.push({
+          time: time,
+          score: score,
+          deadStatus: 'TIME_OUT'
+        })
+        gameOverStatus.isTimeOut = true
+        gameOverStatus.isHit = true
+        this.showChallengerScore()
+      }
+    }
+    else if (timerBar.scaleX >= 1) {
+      timerBar.scaleX = 1
+    }
+
+    // if (timerBar.scaleX > 0.4) {
+    //   timerBar.fillStyle(0x8CC63E, 1)
+    // }
+    // else if (timerBar.scaleX <= 0.4) {
+    //   timerBar.fillStyle(0xC6B83E, 1)
+    // }
+    // else {
+    //   timerBar.fillStyle(0xC6573E, 1)
+    // }
+
     this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
+
     obstacleGroup.forEach((obs) => {
-      if (obs.y > this.game.config.height) {
+      if(obs.y > this.game.config.height) {
         obs.destroy();
       }
     });
+
+    poleGroup.getChildren().forEach((pole) => {
+      if(pole.y > this.game.config.height){
+        pole.destroy();
+      }
+    })
 
     if (poin.y > this.game.config.height + 50) {
       poin.destroy()
       isPoinStillExist = false
     }
-    // poinGroup.forEach((poin) => {
-    //   if (poin.y > this.game.config.height) {
-    //     poin.destroy();
-    //   }
-    // });
 
-    poinCollide = this.physics.add.overlap(player, poin, () => {
-
-      score += 2;
-      scoreUI.setText(""+score);
-      poinCollide.destroy()
-      poin.destroy()
-      isPoinStillExist = false
-
-      let time = new Date()
-      playLog.push({
-        time: time,
-        score: score
-      })
-    }, null, this);
   }
 
   MovingPole(){
@@ -196,23 +241,26 @@ this.tweens.add
     if(allow == true){
 
       pointer = this.input.activePointer;
+      timerBar.scaleX += (1 / 30)
+
+      player.anims.play('PLAYER')
       poleGroup.getChildren().forEach((item) => {
         item.y += 100
       });
 
-      poin.y += 100
-      this.movecloud();
+      //poin.y += 100
+      this.moveCloud();
       if(pointer.x > 360){          //RIGHT
         player.setOrigin(0, 0.5)
         player.setDepth(1)
         player.flipX = true
-        player.x = this.game.config.width / 2
+        player.x = this.game.config.width / 2 - 60
       }
       else {                        //LEFT
         player.setOrigin(1, 0.5)
         player.setDepth(1)
         player.flipX = false
-        player.x = this.game.config.width / 2
+        player.x = this.game.config.width / 2 + 60
       }
 
       //score = this.increaseValueScore(score);
@@ -231,6 +279,22 @@ this.tweens.add
       nextSegmentPos = posY - poleSegment.displayHeight
       poleGroup.add(poleSegment)
       this.addPoleSegment(nextSegmentPos)
+    }
+  }
+
+  moveCloud(){
+
+    cloud.y += 10;
+    cloud2.y += 10;
+    cloud3.y += 10;
+    if(cloud.y > this.game.config.height){
+      cloud.y -= 1500;
+    }
+    if(cloud2.y > this.game.config.height){
+      cloud2.y -= 1500;
+    }
+    if(cloud3.y > this.game.config.height){
+      cloud3.y -= 1500;
     }
   }
 
@@ -307,10 +371,27 @@ this.tweens.add
 
     poinTimeTreshold.delay = Phaser.Math.Between(4000, 5000);
 
+    poinCollide = this.physics.add.overlap(player, poin, () => {
+
+      score += 2;
+      scoreUI.setText(""+score);
+      poinCollide.destroy()
+      poin.destroy()
+      isPoinStillExist = false
+
+      let time = new Date()
+      playLog.push({
+        time: time,
+        score: score,
+        deadStatus: 'ALIVE'
+      })
+    }, null, this);
+
     if(isPoinStillExist === false){
       poin = this.physics.add.sprite(0, -this.game.config.height / 2, 'POIN');
-      poin.setScale(0.25)
-      poin.body.allowGravity = false
+      poin.setScale(0.1)
+      poin.setVelocityY(100)
+      //poin.body.allowGravity = false
       isPoinStillExist = true
 
       if(position === 'RIGHT'){
@@ -328,22 +409,22 @@ this.tweens.add
 
     let exitButton = this.add.sprite(360, 820, 'BG_GO')
     exitButton.setOrigin(0.5, 0.5)
-    exitButton.setScale(0.5)
+    exitButton.setScale(0.8)
     exitButton.setDepth(3)
 
-    let userScorePanel = this.add.sprite(360, 640, 'DG_GO')
+    let userScorePanel = this.add.sprite(360, 600, 'DG_GO')
     userScorePanel.setOrigin(0.5, 0.5)
-    userScorePanel.setScale(0.5)
+    userScorePanel.setScale(0.8)
     userScorePanel.setDepth(2)
 
-    let finalScoreText = this.add.text(360, 560, ''+score, {
-      font: 'bold 64px Arial',
-      fill: '#FFFFFF',
+    let finalScoreText = this.add.text(360, 480, ''+score, {
+      font: '64px FredokaOne',
+      fill: '#7E4B38',
     }).setOrigin(0.5, 0.5).setDepth(2)
 
-    let userHighScore = this.add.text(360, 720, '', {
-      font: 'bold 64px Arial',
-      fill: '#FFFFFF',
+    let userHighScore = this.add.text(360, 670, '', {
+      font: '72px FredokaOne',
+      fill: '#7E4B38',
     }).setOrigin(0.5, 0.5).setDepth(2)
 
     let dateOver = new Date()
@@ -352,6 +433,7 @@ this.tweens.add
 
   challengeOver(over, scoreText, button){
 
+    //console.log(playLog);
     let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameData.token+'+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
     let dataID;
     let data = {
@@ -402,25 +484,6 @@ this.tweens.add
     });
   }
 
-  movecloud()
-  {
-    
-    cloud.y +=100;
-    cloud2.y +=100;
-    cloud3.y +=100;
-    if(cloud.y>this.game.config.height)
-    {
-      cloud.y-=1500;     
-    }
-    if(cloud2.y>this.game.config.height)
-    {
-      cloud2.y-=1500;     
-    }
-    if(cloud3.y>this.game.config.height)
-    {
-      cloud3.y-=1500;     
-    }
-  }
   // checkHitpoint(){
   //
   //   poin.destroy();
