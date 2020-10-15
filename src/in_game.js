@@ -362,6 +362,7 @@ export class Game extends Phaser.Scene{
     //obstacleTimeTreshold.delay = Phaser.Math.Between(1500, 2500);
 
     obstacle = this.physics.add.sprite(0, -200, 'OBSTACLE');
+    obstacle.body.setSize(250,360);
     obstacle.setScale(0.4)
     obstacleGroup.push(obstacle);
 
