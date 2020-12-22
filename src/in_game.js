@@ -463,7 +463,9 @@ export class Game extends Phaser.Scene{
   challengeOver(over, scoreText, button){
 
     //console.log(playLog);
-    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameData.token+'+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameData.token+'+'+Date.now(), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+      mode: CryptoJS.mode.ECB
+    }).toString()
     let dataID;
     let data = {
       linigame_platform_token: gameData.token,
@@ -475,7 +477,9 @@ export class Game extends Phaser.Scene{
     }
     //console.log(data);
     let datas = {
-      datas: CryptoJS.AES.encrypt(JSON.stringify(data), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+      datas: CryptoJS.AES.encrypt(JSON.stringify(data), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+        mode: CryptoJS.mode.ECB
+      }).toString()
     }
 
     fetch(gameData.url+"api/v1.0/leaderboard/climb?lang=id", {

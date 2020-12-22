@@ -66,7 +66,7 @@ export class MainMenu extends Phaser.Scene {
     }
 
     // urlData = {
-    //   apiLP_URL: 'https://88dda0795fec.ngrok.io/',             //// DEVELOPMENT-LOCAL
+    //   apiLP_URL: 'https://f2cb184482cc.ngrok.io/',             //// DEVELOPMENT-LOCAL
     //   apiCPV_URL: 'https://captive-dev.macroad.co.id/',
     // }
 
@@ -536,7 +536,9 @@ export class MainMenu extends Phaser.Scene {
 
     let urlParams = new URLSearchParams(window.location.search);
     let userSession = urlParams.get('session');
-    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameToken+'+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameToken+'+'+Date.now(), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+      mode: CryptoJS.mode.ECB
+    }).toString()
     let dataID;
     let data = {
       linigame_platform_token: gameToken,
@@ -552,14 +554,18 @@ export class MainMenu extends Phaser.Scene {
       data.play_video = 'not_played'
       //console.log(data);
       datas = {
-        datas: CryptoJS.AES.encrypt(JSON.stringify(data), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+        datas: CryptoJS.AES.encrypt(JSON.stringify(data), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+          mode: CryptoJS.mode.ECB
+        }).toString()
       }
     }
     else {
       data.play_video = 'full_played'
       //console.log(data);
       datas = {
-        datas: CryptoJS.AES.encrypt(JSON.stringify(data), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+        datas: CryptoJS.AES.encrypt(JSON.stringify(data), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+          mode: CryptoJS.mode.ECB
+        }).toString()
       }
     }
 
@@ -616,7 +622,9 @@ export class MainMenu extends Phaser.Scene {
         long: location.longitude,
         session: userSession,
         linigame_platform_token: gameToken
-      }), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+      }), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+        mode: CryptoJS.mode.ECB
+      }).toString()
     }
 
     fetch(urlData.apiLP_URL+"api/v1.0/leaderboard/check_user_limit/", {
