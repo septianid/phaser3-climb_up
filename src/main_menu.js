@@ -792,8 +792,8 @@ export class MainMenu extends Phaser.Scene {
     }).then(data => {
 
       //console.log(data.result);
-      if(data.result.rank_high_score === 0){
-        rHData.rank = this.add.text(rankPosConfig.high_score.x, rankPosConfig.high_score.y, ''+data.result.rank_high_score, {
+      if(data.result.rank_high_score === null){
+        rHData.rank = this.add.text(rankPosConfig.high_score.x, rankPosConfig.high_score.y, '-', {
           font: '28px FredokaOne',
           fill: '#8A4923',
           align: 'left'
@@ -817,8 +817,8 @@ export class MainMenu extends Phaser.Scene {
         }).setOrigin(1, 0.5)
       }
 
-      if(data.result.rank_total_score === 0){
-        rTData.rank = this.add.text(rankPosConfig.total_score.x, rankPosConfig.total_score.y, ''+data.result.rank_total_score, {
+      if(data.result.rank_total_score === null){
+        rTData.rank = this.add.text(rankPosConfig.total_score.x, rankPosConfig.total_score.y, '-', {
           font: '28px FredokaOne',
           fill: '#8A4923',
           align: 'left'
