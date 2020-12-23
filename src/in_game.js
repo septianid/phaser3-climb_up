@@ -214,7 +214,7 @@ export class Game extends Phaser.Scene{
       player.y += 1
     }
 
-    if(player.y > this.game.config.height + 100 && gameOverStatus.isFall == false){
+    if(player.y > this.game.config.height + 50 && gameOverStatus.isFall == false){
       player.destroy()
       this.physics.pause()
       obstacleTimeTreshold.remove(false);
