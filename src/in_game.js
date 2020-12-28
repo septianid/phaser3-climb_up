@@ -33,6 +33,7 @@ var gameOverStatus = {}
 
 var collisionDectection;
 var CryptoJS = require('crypto-js')
+var moment = require('moment-timezone')
 
 export class Game extends Phaser.Scene{
   constructor() {
@@ -64,11 +65,12 @@ export class Game extends Phaser.Scene{
 
     gameOverStatus = {
       isHit: false,
-      isTimeOut: false
+      isTimeOut: false,
+      isFall: false
     }
 
-    timerBG = this.add.sprite(360, 0, 'LOADING_BOXG').setScale(0.25).setOrigin(0.5, 0.5).setDepth(1)
-    timerBar = this.add.graphics().fillStyle(0x8CC63E, 1).fillRect(0, 0, 210, 30).setDepth(1).setPosition(255, -15)
+    timerBG = this.add.sprite(360, 50, 'LOADING_BOXG').setScale(0.25).setOrigin(0.5, 0.5).setDepth(1)
+    timerBar = this.add.graphics().fillStyle(0x8CC63E, 1).fillRect(0, 50, 210, 30).setDepth(1).setPosition(255, -15)
 
     poleGroup = this.add.group()
 
@@ -94,13 +96,13 @@ export class Game extends Phaser.Scene{
     cloud2 = this.physics.add.sprite(-200, 950,'CLOUD');
     cloud3 = this.physics.add.sprite(-200, 550,'CLOUD');
 
-    infoScoreUI = this.add.text(80, -30, 'SCORE',{
+    infoScoreUI = this.add.text(80, 40, 'SCORE',{
       font: '42px FredokaOne',
       fill: '#7E4B38',
       align: 'center'
     }).setOrigin(0.5, 0.5);
 
-    scoreUI = this.add.text(50, 30, '' + score, {
+    scoreUI = this.add.text(50, 90, '' + score, {
       font: '76px FredokaOne',
       fill: '#7E4B38',
       align: 'center'
@@ -130,14 +132,15 @@ export class Game extends Phaser.Scene{
         obstacleTimeTreshold.remove(false);
         allow = false;
 
-        let time = new Date()
+        //let time = new Date()
         playLog.push({
-          time: time,
+          time: moment().tz('Asia/Jakarta').format(),
           score: score,
           deadStatus: 'HIT_OBSTACLE'
         })
         gameOverStatus.isHit = true
         gameOverStatus.isTimeOut = true
+        gameOverStatus.isFall = true
         this.showChallengerScore()
       }
     }, null, this);
@@ -183,28 +186,52 @@ export class Game extends Phaser.Scene{
     timerBar.scaleX -= (1/500)
     //console.log(timerBar.scaleX);
 
-    if(timerBar.scaleX <= 0){
+    if (timerBar.scaleX <= 0){
       timerBar.scaleX = 0
+      player.y += 0
       if(gameOverStatus.isTimeOut == false) {
         this.physics.pause()
         obstacleTimeTreshold.remove(false);
         allow = false;
-
-        let time = new Date()
+        
+        //let time = new Date()
+        
         playLog.push({
-          time: time,
+          time: moment().tz('Asia/Jakarta').format(),
           score: score,
           deadStatus: 'TIME_OUT'
         })
         gameOverStatus.isTimeOut = true
         gameOverStatus.isHit = true
+        gameOverStatus.isFall = true
         this.showChallengerScore()
       }
     }
     else if (timerBar.scaleX >= 1) {
       timerBar.scaleX = 1
     }
+    else {
+      player.y += 1
+    }
 
+    if(player.y > this.game.config.height + 50 && gameOverStatus.isFall == false){
+      player.destroy()
+      this.physics.pause()
+      obstacleTimeTreshold.remove(false);
+      allow = false;
+
+      //let time = new Date()
+      playLog.push({
+          time: moment().tz('Asia/Jakarta').format(),
+          score: score,
+          deadStatus: 'FALL DOWN'
+      })
+
+      gameOverStatus.isTimeOut = true
+      gameOverStatus.isHit = true
+      gameOverStatus.isFall = true
+      this.showChallengerScore()
+    }
     // if (timerBar.scaleX > 0.4) {
     //   timerBar.fillStyle(0x8CC63E, 1)
     // }
@@ -215,7 +242,7 @@ export class Game extends Phaser.Scene{
     //   timerBar.fillStyle(0xC6573E, 1)
     // }
 
-    this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
+    //this.cameras.main.scrollY = player.y - this.game.config.height / 1.6;
 
     obstacleGroup.forEach((obs) => {
       if(obs.y > this.game.config.height) {
@@ -242,6 +269,7 @@ export class Game extends Phaser.Scene{
 
       pointer = this.input.activePointer;
       timerBar.scaleX += (1 / 30)
+      player.y -= 15
 
       player.anims.play('PLAYER')
       poleGroup.getChildren().forEach((item) => {
@@ -334,6 +362,7 @@ export class Game extends Phaser.Scene{
     //obstacleTimeTreshold.delay = Phaser.Math.Between(1500, 2500);
 
     obstacle = this.physics.add.sprite(0, -200, 'OBSTACLE');
+    obstacle.body.setSize(250,360);
     obstacle.setScale(0.4)
     obstacleGroup.push(obstacle);
 
@@ -378,9 +407,10 @@ export class Game extends Phaser.Scene{
       poin.destroy()
       isPoinStillExist = false
 
-      let time = new Date()
+      //let time = new Date()   
+
       playLog.push({
-        time: time,
+        time: moment().tz('Asia/Jakarta').format(),
         score: score,
         deadStatus: 'ALIVE'
       })
@@ -433,7 +463,9 @@ export class Game extends Phaser.Scene{
   challengeOver(over, scoreText, button){
 
     //console.log(playLog);
-    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameData.token+'+'+Date.now(), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+    let requestID = CryptoJS.AES.encrypt('LG'+'+'+gameData.token+'+'+Date.now(), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+      mode: CryptoJS.mode.ECB
+    }).toString()
     let dataID;
     let data = {
       linigame_platform_token: gameData.token,
@@ -445,7 +477,9 @@ export class Game extends Phaser.Scene{
     }
     //console.log(data);
     let datas = {
-      datas: CryptoJS.AES.encrypt(JSON.stringify(data), 'c0dif!#l1n!9am#enCr!pto9r4pH!*').toString()
+      datas: CryptoJS.AES.encrypt(JSON.stringify(data), CryptoJS.enc.Utf8.parse('c0dif!#l1n!9am#enCr!pto9r4pH!*12'), {
+        mode: CryptoJS.mode.ECB
+      }).toString()
     }
 
     fetch(gameData.url+"api/v1.0/leaderboard/climb?lang=id", {
